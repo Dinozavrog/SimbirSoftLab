@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SimbirSoft</string>
+    <string name="screen_home">Home</string>
+    <string name="screen_details">Details</string>
+    <string name="screen_add">Add</string>
+    <string name="details_prefix">details/</string>
+</resources>
