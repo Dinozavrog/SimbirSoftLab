@@ -16,12 +16,12 @@ val appModule = module {
         )
     }
     viewModel {
-        NoteDetailsViewModel(
+        CreateNoteViewModel(
             get()
         )
     }
     viewModel {
-        CreateNoteViewModel(
+        NoteDetailsViewModel(
             get()
         )
     }

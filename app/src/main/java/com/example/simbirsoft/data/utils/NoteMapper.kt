@@ -1,17 +1,15 @@
 package com.example.simbirsoft.data.utils
 
 import com.example.simbirsoft.data.local.model.NoteLocalModel
+import com.example.simbirsoft.data.remote.model.NoteRemoteModel
 import com.example.simbirsoft.domain.model.NoteModel
 import java.sql.Date
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
 
 fun NoteLocalModel.toNoteModel(): NoteModel {
-//    val date = getHours(dateStart = dateStart, dateFinish = dateFinish)
     return NoteModel(
         id = id,
         name = name,
@@ -65,5 +63,35 @@ fun NoteModel.mapNoteModelToLocal(): NoteLocalModel {
         timeFinish = timeFinish,
         minutesStart = minutesStart,
         minutesFinish = minutesFinish
+    )
+}
+
+fun NoteRemoteModel.toNoteLocalModel(): NoteLocalModel {
+    val calendar = Calendar.getInstance()
+    calendar.time = dateStart
+
+    val calendarSecond = Calendar.getInstance()
+    calendarSecond.time = dateFinish
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+    val monthFormat = SimpleDateFormat("MMMM", Locale.ENGLISH)
+    val month = monthFormat.format(calendar.time)
+    val hour = calendar.get(Calendar.HOUR_OF_DAY)
+    val minutesStart = calendar.get(Calendar.MINUTE)
+    val timeFinish = calendarSecond.get(Calendar.HOUR_OF_DAY)
+    val minutesFinish = calendarSecond.get(Calendar.MINUTE)
+
+    val capitalizedMonth = month.substring(0, 1).uppercase(Locale.ENGLISH) + month.substring(1)
+    return NoteLocalModel(
+        id = id,
+        name = name,
+        description = description,
+        month = capitalizedMonth,
+        day = day.toString(),
+        timeStart = hour,
+        timeFinish = timeFinish,
+        minutesStart = minutesStart,
+        minutesFinish = minutesFinish
+
     )
 }

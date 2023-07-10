@@ -22,12 +22,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.simbirsoft.domain.model.NoteModel
 import com.example.simbirsoft.presentation.presenter.NoteDetailsViewModel
 import com.example.simbirsoft.ui.theme.Background
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun NoteDetailScreen(
     noteId: Int,
-    viewModel: NoteDetailsViewModel = viewModel()
+    viewModel: NoteDetailsViewModel = koinViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
 
@@ -98,8 +99,8 @@ fun NoteDetailScreen(
     }
 }
 
-@Preview
-@Composable
-fun show() {
-    NoteDetailScreen(note = NoteModel(1, "Note", "jfjdjjdjhdfvhjdfhjdhdjsdshjdshsdjhsdhjsdjhsjhsjhsdhjsdhjdshjdshjdshjdshjhjdshjsdhjhdshjsdhdshhjdshjdshjdshjdshjsdhjhjdshjhjsdhjsdhjsdhjdshjdshjshjdshj", "September", 10, 10, 10, 10, 10))
-}
+//@Preview
+//@Composable
+//fun show() {
+//    NoteDetailScreen(note = NoteModel(1, "Note", "jfjdjjdjhdfvhjdfhjdhdjsdshjdshsdjhsdhjsdjhsjhsjhsdhjsdhjdshjdshjdshjdshjhjdshjsdhjhdshjsdhdshhjdshjdshjdshjdshjsdhjhjdshjhjsdhjsdhjsdhjdshjdshjshjdshj", "September", 10, 10, 10, 10, 10))
+//}

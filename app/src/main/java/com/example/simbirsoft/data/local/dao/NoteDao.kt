@@ -21,8 +21,6 @@ interface NoteDao {
     @Query("SELECT * FROM notes WHERE id = :id LIMIT 1")
     suspend fun getNoteById(id: Int): NoteLocalModel
 
-    @Query("SELECT * FROM notes WHERE day = :day AND month = :month")
-    suspend fun getNotesByDate1(day: String, month: String): List<NoteLocalModel>?
-
-
+    @Query("SELECT * FROM notes WHERE :day LIKE day AND :month LIKE month")
+    suspend fun getNotesByDate(day: String, month: String): List<NoteLocalModel>
 }

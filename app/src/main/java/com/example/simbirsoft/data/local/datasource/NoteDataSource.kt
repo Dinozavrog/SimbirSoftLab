@@ -30,10 +30,8 @@ class NoteDataSource(context: Context) {
         noteDao.delete(note)
     }
 
-    suspend fun getNotesByDate(month: String, day:String): List<NoteLocalModel>? {
-        Log.e("datasource", noteDao.getNotesByDate1(month, day).toString())
-        Log.e(day, month)
-        return noteDao.getNotesByDate1(month, day)
+    suspend fun getNotesByDate(month: String, day:String): List<NoteLocalModel> {
+        return noteDao.getNotesByDate(day, month)
     }
 
     suspend fun insetAllNotes(notes: List<NoteLocalModel>) {

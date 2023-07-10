@@ -17,7 +17,7 @@ sealed class Screen (
         name = R.string.screen_add,
     )
     object Details: Screen(
-        route = "details/{mangaId}",
+        route = "details/{noteId}",
         name = R.string.screen_details,
     )
 }

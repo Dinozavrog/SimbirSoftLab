@@ -80,6 +80,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
 
     // region Network
     def retrofit = '2.9.0'
@@ -111,6 +112,9 @@ dependencies {
     def koin_version = '3.4.0'
     implementation "io.insert-koin:koin-android:$koin_version"
     implementation "io.insert-koin:koin-androidx-compose:$koin_version"
+    testImplementation "io.insert-koin:koin-test:$koin_version"
+    // Needed JUnit version
+    testImplementation "io.insert-koin:koin-test-junit4:$koin_version"
     //end region
 
     testImplementation 'junit:junit:4.13.2'
@@ -129,4 +133,13 @@ dependencies {
 
     implementation "io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc"
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.6'
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'io.mockk:mockk:1.12.4'
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:1.8.10"
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }

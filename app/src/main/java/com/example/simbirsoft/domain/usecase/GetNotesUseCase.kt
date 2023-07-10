@@ -1,6 +1,5 @@
 package com.example.simbirsoft.domain.usecase
 
-import android.util.Log
 import com.example.simbirsoft.domain.model.NoteModel
 import com.example.simbirsoft.domain.repository.NoteRepository
 import kotlinx.coroutines.Dispatchers
@@ -11,7 +10,6 @@ class GetNotesUseCase (
 ) {
     suspend operator fun invoke(month: String, day:String): List<NoteModel>? {
         return withContext(Dispatchers.IO) {
-            Log.e("usecase", noteRepository.getNotesByDate(month, day).toString())
             noteRepository.getNotesByDate(month, day)
         }
     }

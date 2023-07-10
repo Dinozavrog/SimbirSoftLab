@@ -3,6 +3,7 @@ package com.example.simbirsoft.di
 import com.example.simbirsoft.data.local.datasource.NoteDataSource
 import com.example.simbirsoft.data.local.datasource.NoteRepositoryImpl
 import com.example.simbirsoft.domain.repository.NoteRepository
+import com.example.simbirsoft.domain.usecase.AddNotesFromJsonUseCase
 import com.example.simbirsoft.domain.usecase.DeleteNoteUseCase
 import com.example.simbirsoft.domain.usecase.GetNoteByIdUseCase
 import com.example.simbirsoft.domain.usecase.GetNotesUseCase
@@ -27,6 +28,11 @@ val noteModule = module {
     }
     single {
         provideDeleteNoteUseCase(
+            noteRepository = get()
+        )
+    }
+    single {
+        addNotesFromJsonUseCase(
             noteRepository = get()
         )
     }
@@ -56,3 +62,7 @@ private fun provideDeleteNoteUseCase(
 private fun provideInsertNoteUseCase(
     noteRepository: NoteRepository
 ): InsertNoteUseCase = InsertNoteUseCase(noteRepository)
+
+private fun addNotesFromJsonUseCase(
+    noteRepository: NoteRepository
+): AddNotesFromJsonUseCase = AddNotesFromJsonUseCase(noteRepository)

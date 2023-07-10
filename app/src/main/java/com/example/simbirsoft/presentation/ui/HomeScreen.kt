@@ -2,11 +2,11 @@ package com.example.simbirsoft.presentation.ui
 
 import android.annotation.SuppressLint
 import android.graphics.Paint
-import android.util.Log
 import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -59,7 +59,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -92,8 +91,8 @@ fun HomeContent(
     viewState: HomeViewModel.HomeViewState,
     eventHandler: (HomeViewModel.HomeEvent) -> Unit
 ) {
-    val currentMonth = remember { mutableStateOf("July") }
-    val currentDay = remember { mutableStateOf("7") }
+    val currentMonth = remember { mutableStateOf("January") }
+    val currentDay = remember { mutableStateOf("2") }
     var calendarInputList by remember {
         mutableStateOf(createCalendarList(currentMonth.value))
     }
@@ -139,7 +138,7 @@ fun HomeContent(
                     eventHandler = eventHandler
                 )
                 if (viewState.noteList == null) {
-                    eventHandler.invoke(HomeViewModel.HomeEvent.OnDayClick(day = currentDay.value.toString(), month = currentMonth.value))
+                    eventHandler.invoke(HomeViewModel.HomeEvent.OnDayClick(day = currentDay.value, month = currentMonth.value))
                     CircularProgressIndicator(
                         modifier = Modifier
                             .fillMaxSize()
@@ -148,6 +147,7 @@ fun HomeContent(
                     )
                 }
                 else {
+                    eventHandler.invoke(HomeViewModel.HomeEvent.OnDayClick(day = currentDay.value, month = currentMonth.value))
                     HourList(viewState = viewState, eventHandler = eventHandler)
                 }
             }
@@ -187,7 +187,6 @@ fun Calendar(
     month: String,
     eventHandler: (HomeViewModel.HomeEvent) -> Unit,
 ) {
-
     var canvasSize by remember {
         mutableStateOf(Size.Zero)
     }
@@ -227,7 +226,6 @@ fun Calendar(
                                         day.toString()
                                     )
                                 )
-                                Log.e("day", day.toString() + " " + month)
                                 clickAnimationOffset = offset
                                 scope.launch {
                                     animate(0f, 225f, animationSpec = tween(300)) { value, _ ->
@@ -392,46 +390,17 @@ fun HourList(
             val matchingNote = findMatchingNoteForHour(hour, notes)
             val matchingHours = if (matchingNote != null) findMatchingHours(hour, matchingNote) else emptyList()
             val isFirstHour = index == 0
-            val isDifferentNote = matchingNote != null && matchingNote != findMatchingNoteForHour(hours[index - 1], notes)
+            val isDifferentNote = matchingNote != null && matchingNote != findMatchingNoteForHour(hours[index-1], notes)
 
             if (matchingNote != null && (isFirstHour || isDifferentNote) && hour !in displayedHours) {
-                HourItemColumn(hours = matchingHours, note = matchingNote)
+                HourItemColumn(hours = matchingHours, note = matchingNote, onClick = {eventHandler.invoke(HomeViewModel.HomeEvent.OnNoteClick(matchingNote))})
                 displayedHours.addAll(matchingHours)
-            } else if (hour !in displayedHours){
-                HourItem(hour = hour, note = matchingNote)
+            } else if (hour.padStart(2, '0') !in displayedHours){
+                HourItem(hour = hour, note = matchingNote, onClick = {eventHandler.invoke(HomeViewModel.HomeEvent.OnNoteClick(matchingNote!!))})
             }
         }
     }
 }
-
-
-//@Composable
-//fun HourList(notes: List<NoteModel>?) {
-//    val hours = List(24) { hour -> hour.toString() }
-//    val displayedHours = mutableSetOf<String>()
-//
-//
-//    LazyColumn(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .background(Background)
-//    ) {
-//        itemsIndexed(hours) { index, hour ->
-//            val matchingNote = findMatchingNoteForHour(hour, notes)
-//            val matchingHours = if (matchingNote != null) findMatchingHours(hour, matchingNote) else emptyList()
-//            val isFirstHour = index == 0
-//            val isDifferentNote = matchingNote != null && matchingNote != findMatchingNoteForHour(hours[index - 1], notes)
-//
-//            if (matchingNote != null && (isFirstHour || isDifferentNote) && hour !in displayedHours) {
-//                HourItemColumn(hours = matchingHours, note = matchingNote)
-//                displayedHours.addAll(matchingHours)
-//            } else if (hour !in displayedHours){
-//                HourItem(hour = hour, note = matchingNote)
-//            }
-//        }
-//    }
-//}
-
 
 private fun findMatchingNoteForHour(hour: String, notes: List<NoteModel>?): NoteModel? {
     return notes?.find { note ->
@@ -450,7 +419,10 @@ private fun findMatchingHours(hour: String, note: NoteModel): List<String> {
 
 
 @Composable
-fun HourItemColumn(hours: List<String>, note: NoteModel) {
+fun HourItemColumn(
+    hours: List<String>,
+    note: NoteModel,
+    onClick: (NoteModel) -> Unit) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .padding(16.dp)
@@ -472,7 +444,10 @@ fun HourItemColumn(hours: List<String>, note: NoteModel) {
                 shape = RoundedCornerShape(8.dp)
             )
             .weight(1f)
-            .height((hours.size * 32).dp),
+            .clickable {
+                onClick.invoke(note)
+            }
+            .height((hours.size * 36).dp),
             contentAlignment = Alignment.Center) {
             Text(
                 text = note.name,
@@ -486,7 +461,10 @@ fun HourItemColumn(hours: List<String>, note: NoteModel) {
 
 
 @Composable
-fun HourItem(hour: String, note: NoteModel?) {
+fun HourItem(
+    hour: String,
+    note: NoteModel?,
+    onClick: (NoteModel) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -506,6 +484,9 @@ fun HourItem(hour: String, note: NoteModel?) {
                         shape = RoundedCornerShape(8.dp)
                     )
                     .weight(1f)
+                    .clickable {
+                        onClick.invoke(note)
+                    }
             ) {
                 Text(
                     text = note.name,
@@ -526,25 +507,3 @@ fun HourItem(hour: String, note: NoteModel?) {
         }
     }
 }
-
-
-//@Preview
-//@Composable
-//fun showList() {
-//    HourList(notes = listOf(NoteModel(1, "hdhdhd", "hdhdh", "September", 1, 12, 14, 20, 20),
-//        NoteModel(1, "hdhdhd", "hdhdh", "September", 1, 8, 10, 20, 20),
-//        NoteModel(1, "hdhdhd", "hdhdh", "September", 1, 1, 1,  1, 20)))
-//}
-
-
-
-
-
-
-
-
-
-
-
-
-

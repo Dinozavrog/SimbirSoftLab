@@ -27,7 +27,7 @@ fun NoteNavHost (
             Modifier.padding(innerPadding)
         ) {
             composable(
-                Screen.Home.route // Исправленный пункт навигации для Home
+                Screen.Home.route
             ) {
                 HomeScreen(navController = navController)
             }

@@ -260,11 +260,11 @@ fun CreateNoteContent(
                             title.value,
                             description.value,
                             LocalDate.parse(formattedDate, DateTimeFormatter.ofPattern("MMMM dd yyyy")).month.toString(),
-                            LocalDate.parse(formattedDate, DateTimeFormatter.ofPattern("MMMM dd yyyy")).dayOfMonth,
+                            LocalDate.parse(formattedDate, DateTimeFormatter.ofPattern("MMMM dd yyyy")).dayOfMonth.toString(),
                             pickedStartTime.hour,
-                            pickedStartTime.minute,
                             pickedFinishTime.hour,
-                            pickedFinishTime.hour
+                            pickedStartTime.minute,
+                            pickedFinishTime.minute
                         )
                     ))
 

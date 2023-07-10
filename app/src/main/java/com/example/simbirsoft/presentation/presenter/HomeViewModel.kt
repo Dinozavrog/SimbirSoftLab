@@ -5,6 +5,7 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.simbirsoft.domain.model.NoteModel
+import com.example.simbirsoft.domain.usecase.GetNoteByIdUseCase
 import com.example.simbirsoft.domain.usecase.GetNotesUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +17,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class HomeViewModel(
-    private val getNotesUseCase: GetNotesUseCase
+    private val getNotesUseCase: GetNotesUseCase,
 ): ViewModel() {
 
     private val _state = MutableStateFlow(HomeViewState())
@@ -37,7 +38,6 @@ class HomeViewModel(
     }
 
     private fun onLoadNotes(month: String, day:String) {
-        Log.e("onLoadNotes", "hjdhjjhds")
         viewModelScope.launch {
             try {
                 _state.emit(
@@ -45,7 +45,6 @@ class HomeViewModel(
                         noteList = getNotesUseCase(month, day)
                     )
                 )
-                Log.e("noteslist", state.value.toString())
             } catch (error: Throwable) {
                 Timber.e(error.toString())
             }
@@ -79,8 +78,8 @@ class HomeViewModel(
     )
 
     sealed interface HomeAction {
-        data class Navigate(val noteId: Int) : HomeAction
-        object NavigateToAddScreen : HomeAction
+        data class Navigate(val noteId: Int): HomeAction
+        object NavigateToAddScreen: HomeAction
     }
 
     sealed interface HomeEvent {

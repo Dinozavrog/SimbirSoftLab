@@ -1,6 +1,6 @@
 package com.example.simbirsoft.data.local.datasource
 
-import android.util.Log
+import com.example.simbirsoft.data.remote.addNotesFromJson
 import com.example.simbirsoft.data.utils.mapNoteModelToLocal
 import com.example.simbirsoft.data.utils.toNoteModel
 import com.example.simbirsoft.domain.model.NoteModel
@@ -13,22 +13,16 @@ class NoteRepositoryImpl(private val dataSource: NoteDataSource): NoteRepository
 
     override suspend fun getNotesByDate(month: String, day: String): List<NoteModel>? {
         val response = dataSource.getNotesByDate(month, day)
-        Log.e("response", response.toString())
-        val notes = mutableListOf<NoteModel>()
-        if (response != null) {
-            for (note in response) {
-                notes.add(note.toNoteModel())
-            }
-        }
-        return notes
+        return response.map { it.toNoteModel() }
     }
 
     override suspend fun deleteNote(note: NoteModel) {
         dataSource.deleteNote(note.mapNoteModelToLocal())
     }
 
-    override suspend fun insertAllNotes(notes: List<NoteModel>) {
-        TODO("Not yet implemented")
+    override suspend fun insertAllNotes() {
+        val notes = addNotesFromJson()
+        dataSource.insetAllNotes(notes)
     }
 
     override suspend fun getNoteById(id: Int): NoteModel {
